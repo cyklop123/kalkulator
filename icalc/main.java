@@ -5,6 +5,8 @@
  */
 package icalc;
 
+import java.util.Scanner;
+
 /**
  *
  * @author dstudent
@@ -16,10 +18,12 @@ public class main {
      */
     public static void main(String[] args) {
         //pobieranie danych
-        
+        Scanner s = new Scanner(System.in);
+        String str = s.nextLine();
+
         //wyliczanie
         ICalc calc = new Calculator();
-        System.out.println(calc.calculation("2.5*2.5"));
+        System.out.println(calc.calculation(str));
     }
     
 }

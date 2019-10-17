@@ -5,14 +5,10 @@
  */
 package icalc;
 import functions.*;
-/**
- *
- * @author dstudent
- */
+
 public class Calculator implements ICalc {
 
     @Override
-    @SuppressWarnings("empty-statement")
     public double calculation(String str) {
         //pattern a dzialanie b
         double a,b;
@@ -25,8 +21,8 @@ public class Calculator implements ICalc {
             pos = str.indexOf('*');
         if(pos != -1 )
         {
-            a=Integer.parseInt(str.substring(0,pos));
-            b=Integer.parseInt(str.substring(pos+1,str.length()));
+            a=Double.parseDouble(str.substring(0,pos));
+            b=Double.parseDouble(str.substring(pos+1,str.length()));
             switch(str.substring(pos,pos+1))
             {
                 case "+":
@@ -45,8 +41,23 @@ public class Calculator implements ICalc {
         //pattern func(a)
         
         String[] exps = {"sqrt("};
-        Function[] exps_func = {};
-        
+        Function[] exps_func = {new Sqrt()};
+
+        for(int i=0; i<exps.length; i++)
+        {
+            pos = str.indexOf(exps[i]);
+            if(pos != -1)
+            {
+                pos = pos+exps[i].length();
+                try {
+                    return exps_func[i].run(Double.parseDouble(str.substring(pos, (str.indexOf(")")))));
+                }
+                catch (Exception e){
+                    return 0;
+                }
+            }
+        }
+
         return 0;
     }
     

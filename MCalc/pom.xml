@@ -5,20 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>calculator</groupId>
-    <artifactId>kalkulator</artifactId>
+    <artifactId>MCalc</artifactId>
     <version>1.0-SNAPSHOT</version>
-
-
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>./main</module>
-        <module>./MCalc</module>
-    </modules>
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -27,10 +18,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
         </plugins>
-
     </build>
-
-    
 </project>

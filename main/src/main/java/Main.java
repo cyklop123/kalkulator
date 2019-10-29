@@ -3,19 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package icalc;
 
 import java.util.Scanner;
+import icalc.*;
 
-/**
- *
- * @author dstudent
- */
-public class main {
+public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         //pobieranie danych
         Scanner s = new Scanner(System.in);

@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package icalc;
-import functions.*;
 
 public class Calculator implements ICalc {
 
@@ -35,26 +34,6 @@ public class Calculator implements ICalc {
                     return a/b;
                 case "*":
                     return a*b;
-            }
-        }
-        
-        //pattern func(a)
-        
-        String[] exps = {"sqrt("};
-        Function[] exps_func = {new Sqrt()};
-
-        for(int i=0; i<exps.length; i++)
-        {
-            pos = str.indexOf(exps[i]);
-            if(pos != -1)
-            {
-                pos = pos+exps[i].length();
-                try {
-                    return exps_func[i].run(Double.parseDouble(str.substring(pos, (str.indexOf(")")))));
-                }
-                catch (Exception e){
-                    return 0;
-                }
             }
         }
 

@@ -5,6 +5,7 @@
  */
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,50 +18,43 @@ import icalc.*;
 public class Main {
 
     public static void main(String[] args) {
-        try {
-            //ładowanie klass z plugins
-            File dir = new File("/home/irek2/IdeaProjects/kalkulator/bin/plugins");
-            if(dir.exists())
-                System.out.println("exist");
-            else
-                System.out.println("not exist");
-            URL loadPath =  dir.toURI().toURL();
+        //ładowanie pluginów
+        String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath(); //sciezka jara
+        File dir =  new File( new File(path).getParent() + "/plugins" );
 
-            URL[] classUrl = new URL[]{loadPath};
+        try{
+            URL url = dir.toURI().toURL();
+            URL[] urls = new URL[]{url};
 
-            System.out.println(classUrl.length);
+            ClassLoader cl = new URLClassLoader(urls);
 
-            ClassLoader cl = new URLClassLoader(classUrl);
+            File[] files = dir.listFiles((dir1, name) -> name.endsWith(".class"));
 
-            Class loaderClass = cl.loadClass("Sqrt");
-
-
-/*
-            System.out.println(
-            cl.getClass().getClasses().length
-            );
-*/
-
-            Field f = ClassLoader.class.getDeclaredField("classes");
-            f.setAccessible(true);
-
-            Vector<Class> classes = (Vector<Class>) f.get(cl);
-
-            for(Class c: classes)
-                System.out.println(c.getName());
-
-        } catch (MalformedURLException | ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            for(File f: files)
+            {
+                String className = f.getName().substring(0, f.getName().length() - 6);
+                Class<?> clazz = cl.loadClass(className);
+                System.out.println("Loaded plugin: "+clazz.getName());
+            }
+        } catch (MalformedURLException | ClassNotFoundException e)
+        {
             e.printStackTrace();
         }
 
         //pobieranie danych
-        System.out.println("Podaj wyrażenie matematyczne");
-        Scanner s = new Scanner(System.in);
-        String str = s.nextLine();
+        while(true)
+        {
+            System.out.println("Podaj wyrażenie matematyczne [0=koniec]");
+            Scanner s = new Scanner(System.in);
+            String str = s.nextLine();
 
-        //wyliczanie
-        ICalc calc = new Calculator();
-        System.out.println(calc.calculation(str));
+            if(str.charAt(0) == '0')
+                break;
+
+            //wyliczanie
+            ICalc calc = new Calculator();
+            System.out.println(calc.calculation(str));
+        }
     }
     
 }

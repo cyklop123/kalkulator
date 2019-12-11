@@ -1,16 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package icalc;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 
 public class Calculator implements ICalc {
+
+    HashMap<String,Class> classes;
+
+    public Calculator(HashMap<String, Class> classes)
+    {
+        this.classes = classes;
+    }
 
     @Override
     public double calculation(String str) {
@@ -66,36 +69,25 @@ public class Calculator implements ICalc {
                 {
                     number = 0.0;
                     //wyliczanie funkcji
-                    Class func;
-                    Method param,eval;
+                    ArrayList<Double> parametry = new ArrayList<>();
+                    Method param = null,eval;
                     try{
-                        element = element.substring(0,1).toUpperCase() + element.substring(1).toLowerCase();
-                        func = Class.forName(element);
+                        Class clazz = classes.get(element);
+                        Object obj = clazz.newInstance();
+                        param = clazz.getMethod("getParamCount");
+                        int ile = (int) param.invoke(obj);
 
-                        param = func.getMethod("getParamCount");
-                        eval = func.getMethod("eval");
+                        System.out.println(ile);
 
-                        int ile = (int) param.invoke(null);
-
-                        ArrayList<Double> params = new ArrayList<>();
                         for(int i=0; i<ile; i++)
-                            params.add(stack.pop());
+                        {
+                            parametry.add(stack.pop());
+                        }
 
-                        number = (double) eval.invoke(params);
+                        eval = clazz.getMethod("eval", List.class);
+                        number = (Double) eval.invoke(obj, parametry);
 
-
-                    } catch (ClassNotFoundException ex)
-                    {
-                        System.out.println("Blad ladowania klasy");
-                        ex.printStackTrace();
-                    } catch (NoSuchMethodException ex)
-                    {
-                        System.out.println("Blad wywolania metody");
-                        ex.printStackTrace();
-                    } catch (IllegalAccessException ex)
-                    {
-                        ex.printStackTrace();
-                    } catch (InvocationTargetException ex)
+                    } catch (Exception ex)
                     {
                         ex.printStackTrace();
                     }

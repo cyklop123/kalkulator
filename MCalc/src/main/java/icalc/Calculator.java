@@ -5,14 +5,17 @@
  */
 package icalc;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Stack;
 
 public class Calculator implements ICalc {
 
     @Override
     public double calculation(String str) {
-        String onp = ONPv2(str);
-        System.out.println("||| " + onp + " |||");
+        String onp = ONP(str);
+        System.out.println("Develop output: RPN ||| " + onp + " |||");
         return evalONP(onp);
     }
 
@@ -61,8 +64,41 @@ public class Calculator implements ICalc {
                 }
                 else
                 {
+                    number = 0.0;
                     //wyliczanie funkcji
-                    number = 10.;
+                    Class func;
+                    Method param,eval;
+                    try{
+                        element = element.substring(0,1).toUpperCase() + element.substring(1).toLowerCase();
+                        func = Class.forName(element);
+
+                        param = func.getMethod("getParamCount");
+                        eval = func.getMethod("eval");
+
+                        int ile = (int) param.invoke(null);
+
+                        ArrayList<Double> params = new ArrayList<>();
+                        for(int i=0; i<ile; i++)
+                            params.add(stack.pop());
+
+                        number = (double) eval.invoke(params);
+
+
+                    } catch (ClassNotFoundException ex)
+                    {
+                        System.out.println("Blad ladowania klasy");
+                        ex.printStackTrace();
+                    } catch (NoSuchMethodException ex)
+                    {
+                        System.out.println("Blad wywolania metody");
+                        ex.printStackTrace();
+                    } catch (IllegalAccessException ex)
+                    {
+                        ex.printStackTrace();
+                    } catch (InvocationTargetException ex)
+                    {
+                        ex.printStackTrace();
+                    }
                 }
                 stack.push(number);
             }
@@ -70,7 +106,7 @@ public class Calculator implements ICalc {
         return stack.pop();
     }
 
-    private String ONPv2(String str)
+    private String ONP(String str)
     {
         str = str.replace(" ", "");
         Stack<Character> stack = new Stack<>();
@@ -149,8 +185,3 @@ public class Calculator implements ICalc {
         }
     }
 }
-
-
-// sqrt(5) 
-// sqrt(5+2)
-// 5+2

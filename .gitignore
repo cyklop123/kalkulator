@@ -1,2 +1,11 @@
 .idea/
 out/
+bin/kalkulator.jar
+
+MCalc/target/
+MCalc/MCalc.iml
+
+main/target/
+main/main.iml
+
+kalkulator.iml

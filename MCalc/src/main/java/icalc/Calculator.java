@@ -1,5 +1,4 @@
 package icalc;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +17,7 @@ public class Calculator implements ICalc {
     @Override
     public double calculation(String str) {
         String onp = ONP(str);
-        System.out.println("Develop output: RPN ||| " + onp + " |||");
+        //System.out.println("Develop output: RPN ||| " + onp + " |||");
         return evalONP(onp);
     }
 
@@ -67,30 +66,39 @@ public class Calculator implements ICalc {
                 }
                 else
                 {
-                    number = 0.0;
+                    number = null;
                     //wyliczanie funkcji
                     ArrayList<Double> parametry = new ArrayList<>();
                     Method param = null,eval;
                     try{
+                        if (!classes.containsKey(element))
+                            throw new IllegalArgumentException();
+
                         Class clazz = classes.get(element);
                         Object obj = clazz.newInstance();
                         param = clazz.getMethod("getParamCount");
                         int ile = (int) param.invoke(obj);
 
-                        System.out.println(ile);
 
                         for(int i=0; i<ile; i++)
                         {
-                            parametry.add(stack.pop());
+                            parametry.add(0, stack.pop());
                         }
 
                         eval = clazz.getMethod("eval", List.class);
                         number = (Double) eval.invoke(obj, parametry);
 
-                    } catch (Exception ex)
+                    } catch (IllegalArgumentException ex)
+                    {
+                        System.out.println("Nie ma takiej funkcji!");
+                        ex.printStackTrace();
+                        return 0.0;
+                    }
+                    catch (Exception ex)
                     {
                         ex.printStackTrace();
                     }
+
                 }
                 stack.push(number);
             }
@@ -100,7 +108,6 @@ public class Calculator implements ICalc {
 
     private String ONP(String str)
     {
-        str = str.replace(" ", "");
         Stack<Character> stack = new Stack<>();
         String out = "";
 
@@ -152,8 +159,9 @@ public class Calculator implements ICalc {
         while (!stack.empty())
             out += " " + stack.pop() + " ";
 
-        out = out.replace("  ", " ");
-        return out;
+        //check if it is multiple spaces
+        out = out.replace("  ", " ").replace("  ", " ");
+        return out.trim();
     }
 
     private int precedense(char c)

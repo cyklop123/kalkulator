@@ -3,8 +3,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 import icalc.*;
 
@@ -50,9 +49,26 @@ public class Main {
             if(str.charAt(0) == '0')
                 break;
 
-            //wyliczanie
+            //początkowa obróbka ciągu wejściowego
+            str = str.replace(" ","");
+            int occur = 0;
+            for(int i=0; i<str.length(); i++)
+            {
+                if (Character.isLetter(str.charAt(i)))
+                {
+                    if(occur == 0)
+                        str = str.substring(0,i) + str.substring(i,i+1).toUpperCase() + str.substring(i+1);
+                    else
+                        str = str.substring(0,i) + str.substring(i,i+1).toLowerCase() + str.substring(i+1);
+                    occur++;
+                }
+                else
+                    occur=0;
+            }
+
             System.out.println(calc.calculation(str));
+
         }
     }
-    
+
 }

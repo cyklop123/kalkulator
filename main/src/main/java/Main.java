@@ -1,5 +1,5 @@
 
-import java.io.File;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -34,7 +34,9 @@ public class Main {
             }
         } catch (MalformedURLException | ClassNotFoundException e)
         {
-            e.printStackTrace();
+            StringWriter stringWriter = new StringWriter();
+            e.printStackTrace(new PrintWriter(stringWriter));
+            Logger.getInstance().logFromConsole(stringWriter.toString());
         }
 
         //pobieranie danych

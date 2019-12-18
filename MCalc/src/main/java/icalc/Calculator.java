@@ -1,4 +1,6 @@
 package icalc;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,12 +93,19 @@ public class Calculator implements ICalc {
                     } catch (IllegalArgumentException ex)
                     {
                         System.out.println("Nie ma takiej funkcji!");
-                        ex.printStackTrace();
+
+                        StringWriter stringWriter = new StringWriter();
+                        ex.printStackTrace(new PrintWriter(stringWriter,true));
+                        Logger.getInstance().logFromConsole(stringWriter.toString());
+
                         return 0.0;
                     }
                     catch (Exception ex)
                     {
-                        ex.printStackTrace();
+                        StringWriter stringWriter = new StringWriter();
+                        ex.printStackTrace(new PrintWriter(stringWriter));
+                        Logger.getInstance().logFromConsole(stringWriter.toString());
+                        //ex.printStackTrace();
                     }
 
                 }
